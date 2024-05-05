@@ -13,12 +13,17 @@ async function deviceControl (type, value) {
     case 'fan':
       nameDevice = "V12"
       break
+    case 'test':
+      for (let i = 1; i < 4; i++) {
+        await publishDevice(`V${i}`, value)
+      }
+      return "Test completed"
     default:
       throw ('Invalid device type')
   }
   return await publishDevice(nameDevice, value)
 }
-function getSensorData (type) {
+async function getSensorData (type) {
   console.log ('Get sensor data called with type:', type)
   let result = ""
   switch (type) {
@@ -36,16 +41,21 @@ function getSensorData (type) {
   }
   return result.toString()
 }
+async function getHistorySensor (type){
+  const data = await Log.find({sensorType: type})
+                .limit(10)
+                .sort({dateTime: 1})
+                .select ({dateTime: 1, value: 1, _id: 0})
+  console.log ("Data: ", data)
+  return data
+}
 
-const connection = connectDB();
+const connection = connectDB()
 const sensorData = {
   temp: 0,
   humidity: 0,
   light: 0
 }
-//const Blog = mongoose.model(name, new mongoose.Schema({}));
-//export 
-
 import { connect } from "mqtt";
 import cors from "cors";
 
@@ -62,7 +72,11 @@ const MQTT_TOPIC_SUB = [
   `${MQTT_USERNAME}/feeds/V1`,
   `${MQTT_USERNAME}/feeds/V2`,
   `${MQTT_USERNAME}/feeds/V3`,
-  `${MQTT_USERNAME}/feeds/V12`
+];
+const MQTT_TOPIC_SUB_TEST = [
+  `${MQTT_USERNAME}/feeds/V1`,
+  `${MQTT_USERNAME}/feeds/V2`,
+  `${MQTT_USERNAME}/feeds/V3`,
 ];
 const mqttClient = connect({
   host: MQTT_SERVER,
@@ -105,12 +119,11 @@ mqttClient.on("message", (topic, message) => {
     default:
       break;
   }
-  if (on_message == 0) {
+  if (on_message == 0){
     on_message = 1;
     return;
   }
   else{
-  on_message = 0;
   console.log(`Received message ${message.toString()} on topic ${topic}`);
   console.log(sensorData);
   logData(topic,type,message)
@@ -138,5 +151,6 @@ async function publishDevice (nameDevice, value){
 publishCounter();
 export {
   deviceControl,
-  getSensorData
+  getSensorData,
+  getHistorySensor
 }

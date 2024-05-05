@@ -3,7 +3,13 @@ import mongoose from "mongoose";
 const LogSchema = mongoose.Schema({
     dateTime: {
         type: Date,
-        default: Date.now,
+        default: function() {
+            // Get the current time
+            const currentTime = new Date();
+            // Adjust the time to GMT+7 timezone
+            const currentTimeGMT7 = new Date(currentTime.getTime() + (7 * 60 * 60 * 1000)); // Adding 7 hours for GMT+7
+            return currentTimeGMT7;
+        }
     },
     deviceName: String,
     sensorType: String,

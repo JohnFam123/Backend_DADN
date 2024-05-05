@@ -1,17 +1,15 @@
 import express from 'express';
-const app = express();
-
-app.get ("/helloWorld", (req, res) => {
-    res.send("<h1>Hello World</h1>");
-});
-
-app.get ("/search", (req, res) => {
-    res.send(`<h1>${req.query.name}</h1>`);
-});
-
+import auth from './middleware/authentication.middleware.js';
 import dashboardRoutes from './routes/dashboard.js';
 import loginRoutes from './routes/login.js';
-app.use('/dashboard', dashboardRoutes);
+import bodyParse from 'body-parser';
+
+const app = express();
+app.use (bodyParse.urlencoded({extended: true}));
+app.use (bodyParse.json());
+
+app.use('/dashboard', auth, dashboardRoutes);
+app.use('/login',loginRoutes);
 
 
 app.listen (5000, () => {
