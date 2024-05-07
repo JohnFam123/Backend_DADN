@@ -4,6 +4,7 @@ import * as userController from "../controller/user.controller.js";
 import User from '../model/user.model.js';
 import connectDB from '../controller/database.controller.js';
 import { default as mongoose} from 'mongoose';
+import { deviceControl } from '../controller/device.controller.js';
 
 
 router.get ("/", (req, res) => {
@@ -17,7 +18,7 @@ router.post ("/createUser", async (req, res) => {
         const password = req.body.password;
         const email = req.body.email;
 
-        const user = await User.findOne({ 'username': username });
+        const user = await User.findOne({ 'username': username }).maxTimeMS(25000);
         if (user) {
             console.log("User already exists");
             res.send ('User already exists');
@@ -53,7 +54,26 @@ router.post ("/loginUser", async (req, res) => {
                             username: username,
                             token: result
                      }
-               })}
+    })}
 });
 
+router.post ("/openDoor", async (req, res) => {
+    let value = req.body.value;
+    try{
+        return await deviceControl ('dooropen', value);
+    }
+    catch {
+        console.log (error);
+    }
+});
+
+router.post ("/changeDoorPass", async (req, res) => {
+    let value = req.body.value;
+    try{
+        return await deviceControl ('doorchangepass', value);
+    }
+    catch {
+        console.log (error);
+    }
+});
 export default router;

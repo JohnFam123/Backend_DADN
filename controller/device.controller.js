@@ -13,6 +13,10 @@ async function deviceControl (type, value) {
     case 'fan':
       nameDevice = "V12"
       break
+    case 'dooropen':
+      return await doorOpen(value);
+    case 'doorchangepass':
+      return await doorChangePass(value);
     case 'test':
       for (let i = 1; i < 4; i++) {
         await publishDevice(`V${i}`, value)
@@ -21,6 +25,7 @@ async function deviceControl (type, value) {
     default:
       throw ('Invalid device type')
   }
+  await logData(type,'activity',value);
   return await publishDevice(nameDevice, value)
 }
 async function getSensorData (type) {
@@ -48,6 +53,29 @@ async function getHistorySensor (type){
                 .select ({dateTime: 1, value: 1, _id: 0})
   console.log ("Data: ", data)
   return data
+}
+
+async function getHistoryActivity (){
+  const data = await Log.find({"sensorType": 'activity'})
+                .limit(10)
+                .sort({dateTime: 1})
+                .select ({dateTime: 1, deviceName: 1, value: 1, _id: 0})
+  console.log ("Data: ", data)
+  return data
+}
+let doorPass = "123"
+async function doorOpen (value){
+    if (value != doorPass){
+        return "Wrong password"
+    }
+    else {
+      return "Correct password"
+    }
+}
+
+async function doorChangePass (value){
+    doorPass = value
+    return "Password changed"
 }
 
 const connection = connectDB()
@@ -152,5 +180,6 @@ publishCounter();
 export {
   deviceControl,
   getSensorData,
-  getHistorySensor
+  getHistorySensor,
+  getHistoryActivity
 }

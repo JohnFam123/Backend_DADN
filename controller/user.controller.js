@@ -10,7 +10,8 @@ async function userVerify (username, sessionID){
 
 async function userLogin (username, password){
     try {
-        const user = await User.findOne({ 'username': username });
+        console.log (username, password );
+        const user = await User.findOne({ 'username': username }).maxTimeMS(25000);
         if (user) {
             const match = bcrypt.compare(password, user.password);
             if (match) {

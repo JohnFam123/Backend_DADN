@@ -17,18 +17,4 @@ router.get ("/control", async (req, res) => {
     res.send(result); 
 });
 
-router.get ("/getSensorData", async (req, res) => {
-    res.send(await deviceController.getSensorData (req.query.type));
-    }
-);
-
-router.get ("/getHistorySensor", async (req, res) => {
-    res.send(await deviceController.getHistorySensor (req.query.type));
-    }
-);
-
-router.get ("/getHistoryLog", async (req, res) => {
-    res.send(await deviceController.getHistoryActivity ());
-});
-
 export default router;
