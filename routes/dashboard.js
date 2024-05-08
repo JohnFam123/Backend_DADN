@@ -21,11 +21,19 @@ router.get ("/control", async (req, res) => {
 });
 
 router.get ("/getSensorData", async (req, res) => {
+    if (!req.query.type){
+        res.send ('Invalid query parameters');
+        return;
+    }
     res.send(await deviceController.getSensorData (req.query.type));
     }
 );
 
 router.get ("/getHistorySensor", async (req, res) => {
+    if (!req.query.type){
+        res.send ('Invalid query parameters');
+        return;
+    }
     res.send(await deviceController.getHistorySensor (req.query.type));
     }
 );

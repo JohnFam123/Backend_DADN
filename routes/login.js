@@ -35,6 +35,10 @@ router.post ("/createUser", async (req, res) => {
 router.post ("/loginUser", async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
+    if (!username || !password){
+        res.send('Invalid parameters');
+        return;
+    }
     const result = await userController.userLogin(username, password);
     switch (result) {
         case 'Invalid password':
