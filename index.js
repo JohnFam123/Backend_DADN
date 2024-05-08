@@ -9,7 +9,7 @@ import cors from 'cors';
 const app = express();
 app.use (bodyParse.urlencoded({extended: true}));
 app.use (bodyParse.json());
-app.use(cors({credentials: true, origin: true}));
+app.use(cors({credentials: true, origin: ['https://yolohome2024.web.app']}));
 /* app.all('*', function(req, res, next) {
     res.header('Access-Control-Allow-Origin', 'https://yolohome2024.web.app');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
