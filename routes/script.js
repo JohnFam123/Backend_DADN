@@ -34,5 +34,16 @@ router.get ("/create", async (req, res) => {
 }
 );
 
+router.get ("/delete", async (req, res) => {
+    const token = req.headers.authorization && req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, 'secretkey');
+    const username = decoded.username;
+    const scriptName = req.body.scriptName;
+    let result = "test";
+  
+    result = await ScriptController.deleteScript(username, scriptName);
+    res.send(result);
+});
+
 
 export default router;

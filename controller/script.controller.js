@@ -38,30 +38,50 @@ async function saveScriptLog (username, scriptname, deviceName, scriptType, sens
         return "Error creating script.";
     }
 }
-
+async function deleteScript (username, scriptname){
+    try{
+        const script = await Script.findOne({ 'username': username, 'scriptname': scriptname });
+        if (!script) {
+            console.log("Script not found");
+            return "Script not found";
+        }
+        await script.deleteOne();
+        console.log("Script deleted successfully.");
+        return "Script deleted successfully.";
+    }
+    catch (error) {
+        console.error("Error deleting script:", error);
+        return "Error deleting script.";
+    }
+}
 async function loadScript (username){
     try {
-        const script = await Script.find({ 'username': username });
-        return script;
+        const scripts = await Script.find({ 'username': username });
+        scripts.forEach(script => {
+            console.log(script);
+            doSingleScript(script);
+        });
+        return scripts;
     } catch (error) {
         console.error("Error loading script:", error);
     }
 }
 
-async function doSingleScript (username, scriptname){
-    let script;
-    try {
-        script = await Script.findOne({ 'username': username, 'scriptname': scriptname });
+
+async function doSingleScript (script){
+    try{
+        
     }
-        catch {
-        console.error("Error loading script:", error);
+    catch (error) {
+        console.error("Error executing script:", error);
     }
-    
+
 }
     
 
 
 export {
     createScript,
-    loadScript
+    loadScript,
+    deleteScript
 }

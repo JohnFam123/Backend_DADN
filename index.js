@@ -10,7 +10,17 @@ const app = express();
 app.use (bodyParse.urlencoded({extended: true}));
 app.use (bodyParse.json());
 app.use(cors({credentials: true, origin: true}));
+app.all('*', function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
 
+    if (req.method == 'OPTIONS') {
+        res.send(200);
+    } else {
+        next();
+    }
+});
 app.use('/login',loginRoutes);
 app.use('/dashboard', auth, dashboardRoutes);
 app.use('/script',auth, scriptRoutes);

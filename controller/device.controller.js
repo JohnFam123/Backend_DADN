@@ -113,6 +113,29 @@ const mqttClient = connect({
   password: MQTT_PASSWORD,
 });
 
+let sensorSubsribers = []
+
+class SensorSubscriber {
+  constructor (name, type){
+    this.name = name
+    this.type = type
+    this.subscribers = []
+  }
+  addSubsriber (scriptName, username, type){
+    this.subscribers.push({scriptName, username})
+  }
+  removeSubscriber (scriptName,type){
+    this.subscribers = this.subscribers.filter(sub => sub.scriptName != scriptName)
+  }
+  pingSubscribers (value){
+    this.subscribers.forEach(sub => {
+        sub.publish (value)
+    })
+  }
+}
+
+
+
 mqttClient.on("connect", () => {
   console.log("Connected successfully!");
   MQTT_TOPIC_SUB.forEach((topic) => {
@@ -125,6 +148,9 @@ mqttClient.on("connect", () => {
     });
   });
 });
+
+
+
 let on_message = 0;
 mqttClient.on("message", (topic, message) => {
   if (!message) {
