@@ -47,6 +47,9 @@ async function getSensorData (type) {
   return result.toString()
 }
 async function getHistorySensor (type){
+  if (type != 'temp' && type != 'humidity' && type != 'light'){
+    return "Invalid sensor type"
+  }
   const data = await Log.find({sensorType: type})
                 .limit(10)
                 .sort({dateTime: 1})

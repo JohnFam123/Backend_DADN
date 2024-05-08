@@ -25,8 +25,13 @@ router.get ("/getSensorData", async (req, res) => {
         res.send ('Invalid query parameters');
         return;
     }
+    try{
     res.send(await deviceController.getSensorData (req.query.type));
     }
+    catch (error){
+        console.log (error);
+    }
+}
 );
 
 router.get ("/getHistorySensor", async (req, res) => {
@@ -34,7 +39,13 @@ router.get ("/getHistorySensor", async (req, res) => {
         res.send ('Invalid query parameters');
         return;
     }
-    res.send(await deviceController.getHistorySensor (req.query.type));
+    try{
+        res.send(await deviceController.getHistorySensor (req.query.type));
+    }
+    catch (error){
+        console.log (error);
+        res.send (error)
+    }
     }
 );
 
