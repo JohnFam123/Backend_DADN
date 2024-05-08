@@ -17,7 +17,7 @@ const scriptSchema = new mongoose.Schema({
     scriptType: String,
     sensorType: String,
     value: Number,// In seconds if script is time_based, value if script is sensor_based
-    timeRecurrence: String,//None if script is not time_based
+    trigger: String,//None if script is not time_based
     afterValue: Number,
     status: Boolean,
 });

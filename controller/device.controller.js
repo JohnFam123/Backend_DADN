@@ -127,6 +127,9 @@ mqttClient.on("connect", () => {
 });
 let on_message = 0;
 mqttClient.on("message", (topic, message) => {
+  if (!message) {
+    return;
+  } 
   var type
   switch (topic) {
     case `${MQTT_USERNAME}/feeds/V1`:
@@ -141,9 +144,6 @@ mqttClient.on("message", (topic, message) => {
       type = "light"
       sensorData.light = parseFloat(message.toString());
       break;
-      /* case `${MQTT_USERNAME}/feeds/V12`:
-        type = "fan"
-        sensorData.light = parseFloat(message.toString()); */
     default:
       break;
   }
@@ -156,7 +156,7 @@ mqttClient.on("message", (topic, message) => {
   console.log(sensorData);
   logData(topic,type,message)
   }
-});
+}); 
 
 mqttClient.on("error", (err) => {
   console.error("MQTT error:", err);
@@ -172,6 +172,7 @@ async function publishCounter() {
 }
 
 async function publishDevice (nameDevice, value){
+  value = "" + value
   mqttClient.publish(`${MQTT_USERNAME}/feeds/${nameDevice}`, value.toString());
   return `${nameDevice} set to ${value}`;
 }

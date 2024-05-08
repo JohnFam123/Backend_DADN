@@ -9,6 +9,9 @@ router.get ("/", (req, res) => {
 router.get ("/control", async (req, res) => {
     let result;
     try{
+        if (!req.query.type || !req.query.value){
+            throw ('Invalid query parameters')
+        }
         result = await deviceController.deviceControl (req.query.type, req.query.value);
     } catch (error){
         console.log (error);

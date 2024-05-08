@@ -17,7 +17,7 @@ async function userLogin (username, password){
             if (match) {
                 console.log ("User logged in");
                 const token = await new Promise ((resolve, reject) => {
-                    jwt.sign({username: user.username},'secretkey', {expiresIn: '1h'}, (err, token) => {
+                    jwt.sign({username: user.username},'secretkey', {expiresIn: '24h'}, (err, token) => {
                         if (err) reject(err);
                         resolve(token);
                     });
