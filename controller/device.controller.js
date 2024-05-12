@@ -52,7 +52,7 @@ async function getHistorySensor (type){
   }
   const data = await Log.find({sensorType: type})
                 .limit(10)
-                .sort({dateTime: 1})
+                .sort({dateTime: -1})
                 .select ({dateTime: 1, value: 1, _id: 0})
   console.log ("Data: ", data)
   return data
@@ -61,7 +61,7 @@ async function getHistorySensor (type){
 async function getHistoryActivity (){
   const data = await Log.find({"sensorType": 'activity'})
                 .limit(10)
-                .sort({dateTime: 1})
+                .sort({dateTime: -1})
                 .select ({dateTime: 1, deviceName: 1, value: 1, _id: 0})
   console.log ("Data: ", data)
   return data
