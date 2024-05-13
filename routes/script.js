@@ -40,10 +40,31 @@ router.get ("/delete", async (req, res) => {
     const username = decoded.username;
     const scriptName = req.body.scriptName;
     let result = "test";
-  
-    result = await ScriptController.deleteScript(username, scriptName);
+    
+    try {
+        result = await ScriptController.deleteScript(username, scriptName);
+    }
+    catch (error){
+        result = "error deleting script";
+    }
     res.send(result);
 });
+
+router.get ("/disable", async (req, res) => {
+    const token = req.headers.authorization && req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, 'secretkey');
+    const username = decoded.username;
+    const scriptName = req.body.scriptName;
+
+
+    try {
+        return await ScriptController.disableScript(username, scriptName);
+    }
+    catch {
+        console.log (error);
+        return "error disabling script";
+    }
+    });
 
 
 export default router;

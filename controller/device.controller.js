@@ -61,7 +61,7 @@ async function getHistorySensor (type){
 async function getHistoryActivity (){
   const data = await Log.find({"sensorType": 'activity'})
                 .limit(10)
-                .sort({dateTime: -1})
+                .sort({dateTime: 1})
                 .select ({dateTime: 1, deviceName: 1, value: 1, _id: 0})
   console.log ("Data: ", data)
   return data
@@ -116,16 +116,12 @@ const mqttClient = connect({
   password: MQTT_PASSWORD,
 });
 
-let sensorSubsribers = []
-
-class SensorSubscriber {
-  constructor (name, type){
-    this.name = name
-    this.type = type
-    this.subscribers = []
+class SensorPublisher {
+  constructor (){
+    this.subscribersMap = {}
   }
-  addSubsriber (scriptName, username, type){
-    this.subscribers.push({scriptName, username})
+  addSubsriber (scriptSubscriber, type){
+    this.subscribers.push({scriptSubscriber, 'type': type})
   }
   removeSubscriber (scriptName,type){
     this.subscribers = this.subscribers.filter(sub => sub.scriptName != scriptName)
